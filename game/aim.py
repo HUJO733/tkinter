@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 import random
 from datetime import datetime
 
@@ -15,6 +16,13 @@ lab.grid(column=0, row=0, padx=20, pady=20)
 
 # 입력창
 ent = Entry(win)
+ent.insert(0, '숫자 입력(1 이상 자연수)')
+
+def clear(e):
+    if ent.get() == '숫자 입력(1 이상 자연수)': # 처음 클릭했을때만 지워지게
+        ent.delete(0, len(ent.get())) # 내용 지우기
+    
+ent.bind('<Button-1>', clear) # 마우스 좌클릭시 clear 함수 실행
 ent.grid(column=1, row=0, padx=20, pady=20)
 
 count = 1
@@ -43,12 +51,19 @@ def ran_btn():
     btn.config(text = count)
     btn.place(relx=random.random() * 0.9, rely=random.random() * 0.9)
 
-# 버튼
+# 시작 버튼
 def btn_f():
     global num_t # 전역변수 설정
     global start
-    num_t = int(ent.get())
-    
+
+    try:
+        num_t = int(ent.get())
+        if num_t <= 0:
+            raise ValueError
+    except ValueError:
+        messagebox.showerror("Error", "1 이상의 자연수를 입력하세요.")
+        return
+
     for wg in win.grid_slaves(): # win.grid_slaves() = 위젯 리스트
         wg.destroy() # 요소 제거
     
